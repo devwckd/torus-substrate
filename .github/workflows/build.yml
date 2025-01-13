@@ -1,9 +1,15 @@
 name: Build Torus Runtime
 
 on:
-  push:
-    tags: "v*"
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+      - "runtime-*"
+      - "runtime/*"
+    branches:
+      - github-ci-test
+      - build-runtime
 
 jobs:
   build:
