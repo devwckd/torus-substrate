@@ -11,6 +11,9 @@ use polkadot_sdk::sp_runtime::{BoundedVec, DispatchError};
 use polkadot_sdk::sp_std::vec::Vec;
 use scale_info::TypeInfo;
 
+/// Decentralized autonomous organization application, it's used to do agent
+/// operations on the network, like creating or removing, and needs to be approved
+/// by other peers.
 #[derive(CloneNoBound, DebugNoBound, TypeInfo, Decode, Encode, MaxEncodedLen)]
 #[scale_info(skip_type_params(T))]
 pub struct AgentApplication<T: crate::Config> {
@@ -31,12 +34,12 @@ impl<T: crate::Config> AgentApplication<T> {
             crate::Error::<T>::CannotRevokeRemoveApplication,
         );
 
-        let previously_accepted_by = match &self.status {
-            ApplicationStatus::Resolved {
-                accepted: true,
-                resolved_by,
-            } => resolved_by,
-            _ => return Err(crate::Error::<T>::CannotRevokeUnresolvedApplication.into()),
+        let ApplicationStatus::Resolved {
+            accepted: true,
+            resolved_by: previously_accepted_by,
+        } = self.status
+        else {
+            return Err(crate::Error::<T>::CannotRevokeUnresolvedApplication.into());
         };
 
         self.status = ApplicationStatus::Revoked {
@@ -52,6 +55,7 @@ impl<T: crate::Config> AgentApplication<T> {
     }
 }
 
+/// DAO avaliable actions on the network
 #[derive(CloneNoBound, DebugNoBound, Decode, Encode, TypeInfo, MaxEncodedLen, PartialEq, Eq)]
 pub enum ApplicationAction {
     Add,
@@ -73,6 +77,7 @@ pub enum ApplicationStatus<T: crate::Config> {
     Expired,
 }
 
+/// Create DAO application for the _agent_, if it's not whitelisted yet.
 pub fn submit_application<T: crate::Config>(
     payer: AccountIdOf<T>,
     agent_key: AccountIdOf<T>,
