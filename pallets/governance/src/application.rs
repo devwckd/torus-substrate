@@ -22,6 +22,7 @@ pub struct AgentApplication<T: crate::Config> {
     pub agent_key: AccountIdOf<T>,
     pub data: BoundedVec<u8, T::MaxApplicationDataLength>,
     pub cost: BalanceOf<T>,
+    /// The exact block when the agent will be deleted/expired
     pub expires_at: BlockNumberFor<T>,
     pub action: ApplicationAction,
     pub status: ApplicationStatus<T>,
