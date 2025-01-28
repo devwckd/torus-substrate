@@ -38,7 +38,7 @@ impl<T: crate::Config> AgentApplication<T> {
         let ApplicationStatus::Resolved {
             accepted: true,
             resolved_by: previously_accepted_by,
-        } = self.status
+        } = &self.status
         else {
             return Err(crate::Error::<T>::CannotRevokeUnresolvedApplication.into());
         };
