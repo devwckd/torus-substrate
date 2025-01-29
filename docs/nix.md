@@ -1,5 +1,3 @@
-# change
-
 # Build and development with Nix
 
 The recommended way to install dependencies on the Torus Node project is using
