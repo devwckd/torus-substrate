@@ -42,6 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          push: true
           file: ./docker/xtask.dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
